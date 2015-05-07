@@ -13,12 +13,12 @@ IMAGE_FILENAMES = [ 'images/IMG_%i.jpg' % i for i in xrange(1,9) ]
 
 import re
 def load_class_names():
-        with open("../data/ilsvrc12/synset_words.txt") as f:
-                class_names = f.readlines()
-        for i in xrange(len(class_names)):
-                class_names[i] = re.sub( "(^[A-Za-z0-9]*\s+)|(\n$)","",class_names[i] )
+	with open("../data/ilsvrc12/synset_words.txt") as f:
+		class_names = f.readlines()
+	for i in xrange(len(class_names)):
+		class_names[i] = re.sub( "(^[A-Za-z0-9]*\s+)|(\n$)","",class_names[i] )
 
-        return class_names
+	return class_names
 
 class_names = load_class_names()
 
@@ -35,25 +35,25 @@ def sort_tuple_list_by_item( tuple_list, idx_item, descend=False ):
 
 def load_image_and_predict_class(image_filename):
 
-        input_image = caffe.io.load_image(image_filename)
-        prediction = net.predict([input_image])  # predict takes any number of images, and formats them for the Caffe net automatically
+	input_image = caffe.io.load_image(image_filename)
+	prediction = net.predict([input_image])  # predict takes any number of images, and formats them for the Caffe net automatically
 
-        print '%s\n' % image_filename
+	print '%s\n' % image_filename
 
-        if prediction[0].shape[0] != 1000:
+	if prediction[0].shape[0] != 1000:
 
-                print "Error: Prediction does not contain all 1000 classes."
-                return
+		print "Error: Prediction does not contain all 1000 classes."
+		return
 
-        top3 = sort_tuple_list_by_item( zip(class_names, prediction[0]), 1, descend=True )[:3]
+	top3 = sort_tuple_list_by_item( zip(class_names, prediction[0]), 1, descend=True )[:3]
 
-        for i in xrange(3):
-                print 'predicted class %i: %s' % ( i+1, top3[i][0] )
-                print 'probability: %f' % top3[i][1]
+	for i in xrange(3):
+		print 'predicted class %i: %s' % ( i+1, top3[i][0] )
+		print 'probability: %f' % top3[i][1]
 
-        print '\nentropy: %f' % entropy(prediction[0])
+	print '\nentropy: %f' % entropy(prediction[0])
 
-        print '\n'
+	print '\n'
 
 for image_filename in IMAGE_FILENAMES:
-        load_image_and_predict_class( image_filename )
+	load_image_and_predict_class( image_filename )
